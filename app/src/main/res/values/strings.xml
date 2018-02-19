@@ -2,4 +2,6 @@
     <string name="app_name">Ran_assignment</string>
     <string name="btn_start">开始游戏</string>
     <string name="btn_stop">停止游戏</string>
+    <string name="rank">排名</string>
+    <string name="about">关于</string>
 </resources>

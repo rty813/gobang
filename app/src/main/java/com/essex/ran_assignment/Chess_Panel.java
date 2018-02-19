@@ -163,6 +163,10 @@ public class Chess_Panel extends View {
         builder.show();
     }
 
+    public boolean getIsWhite(){
+        return IsWhite;
+    }
+
     public boolean GetGameResult() {
         return IsGameOver;
     }
@@ -197,6 +201,9 @@ public class Chess_Panel extends View {
 
     //悔棋
     public void regret() {
+        if (IsGameOver || !IsGameStart){
+            return;
+        }
         if (BlackPoint.size() > 0 || WhitePoint.size() > 0) {
             if (IsWhite) {
                 BlackPoint.remove(BlackPoint.size() - 1);

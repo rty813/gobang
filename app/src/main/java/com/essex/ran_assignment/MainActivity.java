@@ -1,19 +1,21 @@
 package com.essex.ran_assignment;
 
-import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+
+import com.dd.morphingbutton.MorphingButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnStart;
+    private MorphingButton btnStart;
     private boolean isStart = false;
 
     @Override
@@ -29,24 +31,64 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         btnStart = findViewById(R.id.btn_start);
+        morph(false, 0);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isStart){
-                    btnStart.setText("开始游戏");
+                    morph(false, 200);
                     chessPanel.restart();
                     chessPanel.setGameStart(false);
                     imageView.setImageResource(R.drawable.white);
                     imageView.setVisibility(View.INVISIBLE);
                 }
                 else{
-                    btnStart.setText("停止游戏");
+                    morph(true, 200);
                     chessPanel.setGameStart(true);
                     imageView.setVisibility(View.VISIBLE);
                 }
                 isStart = !isStart;
             }
         });
+        findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chessPanel.regret();
+                imageView.setImageResource(chessPanel.getIsWhite()? R.drawable.white : R.drawable.black);
+            }
+        });
+    }
+
+    private void morph(boolean isStart, int duration){
+        MorphingButton.Params params;
+        if (!isStart){
+            params = MorphingButton.Params.create()
+                    .duration(duration)
+                    .cornerRadius(dimen(R.dimen.mb_height_56))
+                    .width(dimen(R.dimen.mb_height_56))
+                    .height(dimen(R.dimen.mb_height_56))
+                    .color(color(R.color.green))
+                    .colorPressed(color(R.color.green))
+                    .icon(R.drawable.start);
+        } else {
+            params = MorphingButton.Params.create()
+                    .duration(duration)
+                    .cornerRadius(dimen(R.dimen.mb_height_56))
+                    .width(dimen(R.dimen.mb_height_56))
+                    .height(dimen(R.dimen.mb_height_56))
+                    .color(color(R.color.red))
+                    .colorPressed(color(R.color.red))
+                    .icon(R.drawable.stop);
+        }
+        btnStart.morph(params);
+    }
+
+    private int dimen(@DimenRes int resId) {
+        return (int) getResources().getDimension(resId);
+    }
+
+    public int color(@ColorRes int resId) {
+        return getResources().getColor(resId);
     }
 
     @Override
@@ -58,12 +100,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (isStart = savedInstanceState.getBoolean("isStart")){
-            btnStart.setText("停止游戏");
-        }
-        else{
-            btnStart.setText("开始游戏");
-        }
+        isStart = savedInstanceState.getBoolean("isStart");
+        morph(isStart, 0);
     }
 
     @Override
@@ -71,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -83,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
                         .setMessage("这是xxx的课程设计")
                         .setPositiveButton("确定", null)
                         .show();
+                break;
+            case R.id.menu_rank:
+                startActivity(new Intent(this, RankActivity.class));
                 break;
             default:
                 return super.onOptionsItemSelected(item);

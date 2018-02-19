@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:title="关于"
-        android:id="@+id/menu_about"/>
+        android:title="@string/about"
+        android:id="@+id/menu_about"
+        android:orderInCategory="2"/>
+    <item
+        android:title="@string/rank"
+        android:id="@+id/menu_rank"
+        android:orderInCategory="1"/>
 </menu>
